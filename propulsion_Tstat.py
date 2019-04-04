@@ -14,11 +14,11 @@ class PropulsionComp(ExplicitComponent):
         self.add_input('P_T', units='W', desc='Minimum Required Power for Thrust')
         self.add_input('P_0', units='W',desc='Required Standby Power')
         self.add_input('T_0', units='N', desc='Thrust Value')
-        self.add_input('v_e', units='m/s', desc='Exhaust Velocity')
+        # self.add_input('v_e', units='m/s', desc='Exhaust Velocity')
 
         #Output
         self.add_output('T', units='N', desc='Satellite Thrust' )
-        self.add_output('mdot', units='kg/s', desc='Mass Flow' )
+        # self.add_output('mdot', units='kg/s', desc='Mass Flow' )
 
         self.declare_partials('*','*')
 
@@ -34,4 +34,4 @@ class PropulsionComp(ExplicitComponent):
         if (P_sa + P_batt) < P_th:
             outputs['T'] = 0
 
-        outputs['mdot'] = outputs['T']/inputs['v_e']
+        # outputs['mdot'] = outputs['T']/inputs['v_e']
