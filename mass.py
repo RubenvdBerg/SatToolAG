@@ -23,6 +23,7 @@ class MassComp(ExplicitComponent):
         self.declare_partials('*','*')
 
     def compute(self, inputs, outputs):
-        DV = sqrt(inputs['mu']/inputs['RF'])-sqrt(inputs['mu']/inputs['R0'])
+        mu =
+        DV = sqrt(inputs['mu']/inputs['R0'])-sqrt(inputs['mu']/inputs['R0'])
         MR = exp(DV/inputs['v_e'])
         output['M_0'] = M_p+inputs['M_batt']+inputs['M_sa']
