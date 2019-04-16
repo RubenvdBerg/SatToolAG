@@ -35,7 +35,7 @@ Tcy = Tch + Tth
 
 #Iterative Equations and Plotting
 Mi = M0
-i = 0            #cycle counter
+i = 0            #cycle counterprint(f"The Propellant Mass will be {Mp} kg of Xenon")
 DVtot = 0        #state DV
 DVtlist =[]      #state DV list
 DV = []          #DV list
@@ -65,7 +65,7 @@ print(f"A Charging Phase lasts {Tch/3600:.2f} hours")
 print(f"The Solar Array will be {Asa:.2f} square meters")
 print(f"The Battery will weigh {Mbatt:.2f} kg")
 print(f"The Battery will have a capacity of {Cbatt:.0f} Joules or {Cbatt/3600:.0f} Wh")
-
+print(f"The Propellant Mass will be {Mp:.2f} kg of Xenon")
 
 #Plotstuff
 ilist = list(range(i))
