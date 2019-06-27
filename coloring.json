@@ -155,37 +155,16 @@
    null,
    null,
    null,
-   null,
-   null,
-   null,
-   null,
-   null,
-   null,
-   null,
-   null,
-   null,
-   null,
-   null,
-   null,
-   null,
-   null,
-   null,
-   null,
-   null,
-   null,
-   null,
-   null,
-   null,
    null
 ]],
 "rev": [[
    [],
-   [0, 1, 4, 5, 6, 7, 8, 9, 10, 11, 12, 50, 51, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 74],
-   [2, 3, 13, 16, 17, 18, 19, 20, 21, 22, 23, 24],
+   [0, 2, 3, 13, 16, 17, 18, 19, 20, 21, 22, 23, 24, 62],
    [14, 15, 25, 28, 29, 30, 31, 32, 33, 34, 35, 36],
    [26, 27, 37, 40, 41, 42, 43, 44, 45, 46, 47, 48],
-   [38, 39, 49, 52, 53, 54, 55, 56, 57, 58, 59, 60, 76, 78, 80, 82],
-   [73, 75, 77, 79, 81, 83]
+   [38, 39, 49, 52, 53, 54, 55, 56, 57, 58, 59, 60],
+   [1, 4, 5, 6, 7, 8, 9, 10, 11, 12, 50, 51, 64, 66, 68, 70],
+   [61, 63, 65, 67, 69, 71]
 ],
 [
    null,
@@ -259,19 +238,138 @@
    null,
    null,
    null,
-   null,
-   null,
-   null,
-   null,
-   null,
-   null,
-   null,
-   null,
-   null,
-   null,
-   null,
-   null,
    null
 ]],
-"sparsity": null
+"sparsity": {
+"traj.phases.phase0.collocation_constraint.defects:m": {
+   "traj.phases.phase0.control_group.indep_controls.controls:theta": [[], [], [12, 36]],
+   "traj.phases.phase0.indep_states.states:m": [
+        [0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9, 9, 10, 10, 11, 11],
+        [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22],
+        [12, 23]],
+   "traj.phases.phase0.indep_states.states:vx": [[], [], [12, 23]],
+   "traj.phases.phase0.indep_states.states:vy": [[], [], [12, 23]],
+   "traj.phases.phase0.indep_states.states:x": [[], [], [12, 23]],
+   "traj.phases.phase0.indep_states.states:y": [[], [], [12, 23]],
+   "traj.phases.phase0.time_extents.t_duration": [[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [12, 1]],
+   "traj.phases.phase0.time_extents.t_initial": [[], [], [12, 1]]
+},
+"traj.phases.phase0.collocation_constraint.defects:vx": {
+   "traj.phases.phase0.control_group.indep_controls.controls:theta": [
+        [0, 0, 0, 1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 4, 5, 5, 5, 6, 6, 6, 7, 7, 7, 8, 8, 8, 9, 9, 9, 10, 10, 10, 11, 11, 11],
+        [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35],
+        [12, 36]],
+   "traj.phases.phase0.indep_states.states:m": [
+        [0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9, 9, 10, 10, 11, 11],
+        [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22],
+        [12, 23]],
+   "traj.phases.phase0.indep_states.states:vx": [
+        [0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9, 9, 10, 10, 11, 11],
+        [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22],
+        [12, 23]],
+   "traj.phases.phase0.indep_states.states:vy": [
+        [0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9, 9, 10, 10, 11, 11],
+        [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22],
+        [12, 23]],
+   "traj.phases.phase0.indep_states.states:x": [[], [], [12, 23]],
+   "traj.phases.phase0.indep_states.states:y": [
+        [0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9, 9, 10, 10, 11, 11],
+        [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22],
+        [12, 23]],
+   "traj.phases.phase0.time_extents.t_duration": [[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [12, 1]],
+   "traj.phases.phase0.time_extents.t_initial": [[], [], [12, 1]]
+},
+"traj.phases.phase0.collocation_constraint.defects:vy": {
+   "traj.phases.phase0.control_group.indep_controls.controls:theta": [
+        [0, 0, 0, 1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 4, 5, 5, 5, 6, 6, 6, 7, 7, 7, 8, 8, 8, 9, 9, 9, 10, 10, 10, 11, 11, 11],
+        [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35],
+        [12, 36]],
+   "traj.phases.phase0.indep_states.states:m": [
+        [0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9, 9, 10, 10, 11, 11],
+        [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22],
+        [12, 23]],
+   "traj.phases.phase0.indep_states.states:vx": [[], [], [12, 23]],
+   "traj.phases.phase0.indep_states.states:vy": [
+        [0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9, 9, 10, 10, 11, 11],
+        [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22],
+        [12, 23]],
+   "traj.phases.phase0.indep_states.states:x": [[], [], [12, 23]],
+   "traj.phases.phase0.indep_states.states:y": [
+        [0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9, 9, 10, 10, 11, 11],
+        [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22],
+        [12, 23]],
+   "traj.phases.phase0.time_extents.t_duration": [[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [12, 1]],
+   "traj.phases.phase0.time_extents.t_initial": [[], [], [12, 1]]
+},
+"traj.phases.phase0.collocation_constraint.defects:x": {
+   "traj.phases.phase0.control_group.indep_controls.controls:theta": [
+        [0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9, 9, 10, 10, 11, 11],
+        [0, 2, 3, 5, 6, 8, 9, 11, 12, 14, 15, 17, 18, 20, 21, 23, 24, 26, 27, 29, 30, 32, 33, 35],
+        [12, 36]],
+   "traj.phases.phase0.indep_states.states:m": [
+        [0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9, 9, 10, 10, 11, 11],
+        [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22],
+        [12, 23]],
+   "traj.phases.phase0.indep_states.states:vx": [
+        [0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9, 9, 10, 10, 11, 11],
+        [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22],
+        [12, 23]],
+   "traj.phases.phase0.indep_states.states:vy": [[], [], [12, 23]],
+   "traj.phases.phase0.indep_states.states:x": [
+        [0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9, 9, 10, 10, 11, 11],
+        [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22],
+        [12, 23]],
+   "traj.phases.phase0.indep_states.states:y": [
+        [0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9, 9, 10, 10, 11, 11],
+        [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22],
+        [12, 23]],
+   "traj.phases.phase0.time_extents.t_duration": [[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [12, 1]],
+   "traj.phases.phase0.time_extents.t_initial": [[], [], [12, 1]]
+},
+"traj.phases.phase0.collocation_constraint.defects:y": {
+   "traj.phases.phase0.control_group.indep_controls.controls:theta": [
+        [0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9, 9, 10, 10, 11, 11],
+        [0, 2, 3, 5, 6, 8, 9, 11, 12, 14, 15, 17, 18, 20, 21, 23, 24, 26, 27, 29, 30, 32, 33, 35],
+        [12, 36]],
+   "traj.phases.phase0.indep_states.states:m": [
+        [0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9, 9, 10, 10, 11, 11],
+        [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22],
+        [12, 23]],
+   "traj.phases.phase0.indep_states.states:vx": [[], [], [12, 23]],
+   "traj.phases.phase0.indep_states.states:vy": [
+        [0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9, 9, 10, 10, 11, 11],
+        [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22],
+        [12, 23]],
+   "traj.phases.phase0.indep_states.states:x": [[], [], [12, 23]],
+   "traj.phases.phase0.indep_states.states:y": [
+        [0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9, 9, 10, 10, 11, 11],
+        [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22],
+        [12, 23]],
+   "traj.phases.phase0.time_extents.t_duration": [[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [12, 1]],
+   "traj.phases.phase0.time_extents.t_initial": [[], [], [12, 1]]
+},
+"traj.phases.phase0.continuity_comp.defect_control_rates:theta_rate": {
+   "traj.phases.phase0.control_group.indep_controls.controls:theta": [
+        [0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 5, 6, 6, 6, 6, 6, 6, 7, 7, 7, 7, 7, 7, 8, 8, 8, 8, 8, 8, 9, 9, 9, 9, 9, 9, 10, 10, 10, 10, 10, 10],
+        [0, 1, 2, 3, 4, 5, 3, 4, 5, 6, 7, 8, 6, 7, 8, 9, 10, 11, 9, 10, 11, 12, 13, 14, 12, 13, 14, 15, 16, 17, 15, 16, 17, 18, 19, 20, 18, 19, 20, 21, 22, 23, 21, 22, 23, 24, 25, 26, 24, 25, 26, 27, 28, 29, 27, 28, 29, 30, 31, 32, 30, 31, 32, 33, 34, 35],
+        [11, 36]],
+   "traj.phases.phase0.indep_states.states:m": [[], [], [11, 23]],
+   "traj.phases.phase0.indep_states.states:vx": [[], [], [11, 23]],
+   "traj.phases.phase0.indep_states.states:vy": [[], [], [11, 23]],
+   "traj.phases.phase0.indep_states.states:x": [[], [], [11, 23]],
+   "traj.phases.phase0.indep_states.states:y": [[], [], [11, 23]],
+   "traj.phases.phase0.time_extents.t_duration": [[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [11, 1]],
+   "traj.phases.phase0.time_extents.t_initial": [[], [], [11, 1]]
+},
+"traj.phases.phase0.time.time": {
+   "traj.phases.phase0.control_group.indep_controls.controls:theta": [[], [], [1, 36]],
+   "traj.phases.phase0.indep_states.states:m": [[], [], [1, 23]],
+   "traj.phases.phase0.indep_states.states:vx": [[], [], [1, 23]],
+   "traj.phases.phase0.indep_states.states:vy": [[], [], [1, 23]],
+   "traj.phases.phase0.indep_states.states:x": [[], [], [1, 23]],
+   "traj.phases.phase0.indep_states.states:y": [[], [], [1, 23]],
+   "traj.phases.phase0.time_extents.t_duration": [[0], [0], [1, 1]],
+   "traj.phases.phase0.time_extents.t_initial": [[0], [0], [1, 1]]
+}
+}
 }

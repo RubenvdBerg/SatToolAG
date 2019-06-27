@@ -68,6 +68,11 @@ if __name__ == "__main__":
     p.run_model()
     print(p[f'istep_{N-1}.DV_tot_e'])
 
+    case = cr.get_case(driver_cases[p.model['M_e']])
+    objectives = case.get_objectives()
+    design_vars = case.get_design_vars()
+    constraints = case.get_constraints()
+
     # #Plotting
     # Re = [(p['init_cond.R0']-6378000)*10**-3,]
     # for i in range(N):

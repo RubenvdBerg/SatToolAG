@@ -34,7 +34,7 @@ ivc.add_output('T_0', 0.015, units='N',desc='Constant Thrust Value')
 p = Problem()
 model = p.model = Group()
 model.add_subsystem('init_cond', ivc, promotes=['*'])
-N = 111 #Number of iteration steps
+N = 1 #Number of iteration steps
 
 model.add_subsystem('propul', MassPComp())
 model.add_subsystem('solar', SolComp())
@@ -90,10 +90,10 @@ print(p[f'massvel.istep_{N-1}.DV_tot_e'])
 print(p['propul.DV_tot'])
 view_model(p)
 
-# #Plotting
-# Re = [(p['init_cond.R0']-6378000)*10**-3,]
-# for i in range(N):
-#     Re.append((p[f'istep_{i}.Re']-6378000)*10**-3)
-# time = np.arange(N+1)*timestep
-# plt.plot(time,Re)
-# plt.show()
+#Plotting
+Re = [(p['init_cond.R_0']-6378000)*10**-3,]
+for i in range(N):
+    Re.append((p[f'istep_{i}.Re']-6378000)*10**-3)
+time = np.arange(N+1)*timestep
+plt.plot(time,Re)
+plt.show()
