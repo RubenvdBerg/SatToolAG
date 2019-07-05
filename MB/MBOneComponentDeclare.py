@@ -24,6 +24,7 @@ class MBOne(ExplicitComponent):
         self.add_input('M_sa', desc='Solar Array Mass in [kg]')
 
         self.add_output('t_tot', desc='Total Orbit Manouvre Time in [s]')
+        self.add_output('M_d', desc='Left over mass in [s]')
 
     def compute(self, inputs, outputs):
         G_sc    = self.options['G_sc']      #Solar constant in [W/m2]
@@ -55,7 +56,6 @@ class MBOne(ExplicitComponent):
         if P_th-P_sa < 0:
             print ('Continuous Thrusting Available')
 
-        M_d     = M_0-(M_u+M_ps+M_p)    #Left over Mass in [kg]
         t_c     = C_batt/(P_sa-P_req)   #Cycle Charging time in [s]
         t_dc    = C_batt*eta_dis/(P_th) #Cycle Discharging time in [s]
 
@@ -74,6 +74,7 @@ class MBOne(ExplicitComponent):
         #linear overshoot correction
         cycle -= (DV-DV_tot)/DVi
 
+        outputs['M_d'] = M_0-(M_u+M_ps+M_p)    #Left over Mass in [kg]
         outputs['t_tot'] = (t_c+t_dc)*cycle
 
 if __name__ == '__main__':
@@ -86,3 +87,4 @@ if __name__ == '__main__':
     p['M_batt'] = 20
     p.run_model()
     print(p['t_tot'])
+    print(p['M_d'])
