@@ -1,0 +1,16 @@
+{
+  "Satellites" : [
+    {
+      "SatelliteName" : "H2Sat1",
+      "Wet Mass": 3400.0,
+      "Thrust" : 0.088,
+      "Specific Impulse" : 2300.0,
+      "Thrust Power" : 1600.0,
+      "Payload Mass" : "Unknown",
+      "Propulsion System Mass" : "Unknown",
+      "Classification" : "GEO",
+      "Structural Mass" : "Unknown",
+      "Station Keeping Power": "Unknown"
+    }
+  ]
+}
