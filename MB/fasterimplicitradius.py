@@ -11,6 +11,6 @@ def GetRadius(Ri,DV,mu):
 
 if __name__ == '__main__':
     starttime = time.time()
-    print(GetRadius(6778000.,0.01,(398600.*10**9)))
-    time = time.time()-starttime
-    print(time)
+    print(GetRadius(10000.0,23546.214671053374,(398600.*10**9)))
+    # time = time.time()-starttime
+    # print(time)

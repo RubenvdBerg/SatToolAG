@@ -87,7 +87,7 @@ class MBOne(ExplicitComponent):
         I_sp = self.options['I_sp']           #Exhaust Velocity of Thruster in [m/s]
 
 
-        DV_tot  = sqrt(mu/R_0)*(sqrt(2*R_f/(R_f+R_0))-1)+sqrt(mu/R_f)*(1-sqrt(2*R_0/(R_f+R_0))) #Total DeltaV required in [m/s]
+        DV_tot  = sqrt(mu/R_0)*(sqrt(2*R_f/(R_f+R_0))-1)+sqrt(muLauncher Choice/R_f)*(1-sqrt(2*R_0/(R_f+R_0))) #Total DeltaV required in [m/s]
         M_p     = M_0*(1-exp(-DV_tot/(I_sp*g0)))  #Propellant Mass required in [kg]
 
 
