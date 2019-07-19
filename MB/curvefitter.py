@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
 from csv import reader
-from numpy import array, exp, arange
+from numpy import array, exp, arange, linspace
 
 
 def csvtocurve(func,path,param=None,graph=False,givepopt=False):
@@ -18,10 +18,20 @@ def csvtocurve(func,path,param=None,graph=False,givepopt=False):
     popt, pcov = curve_fit(func,DataX,DataY)
 
     if graph == True:
-        xnew = arange(DataX[0],DataX[-1],1)
+        xnew = linspace(DataX[0],DataX[-1],100)
         ynew = func(xnew,*popt)
         plt.plot(DataX,DataY,'o',xnew,ynew,'-')
         plt.show()
+        yaverage = sum(DataY)/len(DataY)
+        SStot = 0
+        SSres = 0
+        fnew = func(DataX,*popt)
+        for y, f in zip(DataY,fnew):
+            SStot += (y-yaverage)**2
+            SSres += (y-f)**2
+
+        R2 = 1-SSres/SStot
+        print(f'R2 is {R2}')
     if  givepopt == True:
         return lambda x : func(x,*popt), popt
     if givepopt == False:
