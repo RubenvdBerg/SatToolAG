@@ -4,7 +4,8 @@ import matplotlib.pyplot as plt
 
 
 path = 'Data/errordata.csv'
-func = lambda x,a,b : a*x**b
+strfunc = 'a+b*x+c*x**2+d*x**3'
+func = lambda x,a,b,c,d : eval(strfunc)
 function, popt = csvtocurve(func,path,givepopt=True)
 
 csvfile = reader(open(path))
@@ -23,11 +24,22 @@ for y, f in zip(datalist[1],datalist[2]):
     SSres += (y-f)**2
 
 R2 = 1-SSres/SStot
-print(R2,*popt)
-print(str(func))
-data, = plt.plot(datalist[0],datalist[1],'g')
-curve, = plt.plot(datalist[0],datalist[2],'b')
-data.set_label('Error Data')
+Ispstr = strfunc.replace('x','Isp')
+print(f'The R2 factor is {R2}')
+print(f'The function is {Ispstr}')
+print(f'The factors are: a={popt[0]},b={popt[1]},c={popt[2]},d={popt[3]}')
+
+fig, ax = plt.subplots()
+data, = ax.plot(datalist[0],datalist[1],'g')
+curve, = ax.plot(datalist[0],datalist[2],'b')
+data.set_label('Absolute Error Data')
 curve.set_label('Curve Fit')
+ax.set_ylabel('Injection Height Error [km]')
+ax.set_xlabel('Specific Impulse [s]')
+fig.suptitle('Injection Height Error Curve')
+textstr = '\n'.join((f'R2 = {R2:.5f}\n','Function:',f'{Ispstr}\n',f'a={popt[0]:.2E},  b={popt[1]:.2E}',f'c={popt[2]:.2E} ,   d={popt[3]:.2E}'))
+props = dict(boxstyle='round', facecolor='wheat', alpha=0.5)
+fig.text(0.02, 0.02, textstr, transform=ax.transAxes, fontsize=10,
+        verticalalignment='bottom', bbox=props)
 plt.legend()
 plt.show()

@@ -12,6 +12,14 @@ def GetInitRadius(DV, Rf):
 
 
 def OHBModel(I_sp, P_sat, t_trans, M_dry, R_f):
+    '''Determines the Injection Height [km], Separation Mass [kg] and Transfer Efficiency [%] given the following parameters
+    I_sp    = Specific Impulse in [s]
+    P_sat   = Satellite Power in [W]
+    t_trans = Allowed Transfer Time in [s]
+    M_dry   = Dry Satellite Mass in [kg]
+    R_f     = Target Orbit in [m]'''
+
+
     FPfunc  = csv_ip1d('Data/FP_Isp-Graph.csv')
     FPRatio = FPfunc(I_sp)*10**-6                   #Force-Power Ratio in [N/W]
     Thrust  = FPRatio*P_sat                         #Thrust in [N]
@@ -21,7 +29,7 @@ def OHBModel(I_sp, P_sat, t_trans, M_dry, R_f):
     R0      = GetInitRadius(DV,R_f)                 #Injection Radius in [m]
     Rinject = R0/1000-6371                          #Injection Height in [km]
 
-    #Linear approximation of Ariane62 Launcher Data
+    #Third order polynomial approximation of Ariane62 Launcher Data
     f = lambda x,a,b,c,d : a+b*x+c*x**2+d*x**3
     RtoM = csvtocurve(f,'Data/Ariane62MassRadiusWollenhaupt.csv')
     Msep = RtoM(Rinject)
@@ -54,12 +62,33 @@ if __name__ == '__main__':
     fig, ax1 = plt.subplots()
     ax1.set_xlabel('Specific Impulse [s]')
     ax1.set_ylabel('Injection Height [km], Seperation Mass [kg]',)
-    ax1.plot(Ilist,Rlist,'g')
-    ax1.plot(Ilist,Mlist,'k')
+    lineR, = ax1.plot(Ilist,Rlist,'g')
+    lineM, = ax1.plot(Ilist,Mlist,'k')
 
     ax3 = ax1.twinx()
-    ax3.plot(Ilist,Slist,'r')
-    ax3.set_ylabel('Transfer Efficiency [%]',color='r')
+    lineS, = ax3.plot(Ilist,Slist,'r')
+    ax3.set_ylabel('Transfer Efficiency [%]')
+    ax4 = ax1.twinx()
+    fig.subplots_adjust(right=0.8)
+    def make_patch_spines_invisible(ax):
+        ax.set_frame_on(True)
+        ax.patch.set_visible(False)
+        for sp in ax.spines.values():
+            sp.set_visible(False)
+
+    lineV, = ax4.plot(Ilist,DVlist)
+    ax4.set_ylabel('DeltaV [m/s]',color='b')
+    ax4.spines['right'].set_position(('axes',1.15))
+    make_patch_spines_invisible(ax4)
+    ax4.spines['right'].set_visible(True)
+    fig.suptitle('Example MEO Transfer on an Ariane62 - Model')
+    lineR.set_label('Injection Height')
+    lineM.set_label('Separation Mass')
+    lineS.set_label('Transfer Efficiency')
+    lineV.set_label('DeltaV')
+    fig.legend(loc='lower right',bbox_to_anchor=(0.8,0.3))
     # plt.show()
-    # plt.plot(Ilist,DVlist)
+
+
+
     plt.show()
