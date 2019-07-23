@@ -4,8 +4,8 @@ import matplotlib.pyplot as plt
 
 
 path = 'Data/errordata.csv'
-strfunc = 'a+b*x+c*x**2+d*x**3'
-func = lambda x,a,b,c,d : eval(strfunc)
+strfunc = 'a+b*x+c*x**2+d*x**3+e*x**4'
+func = lambda x,a,b,c,d,e : eval(strfunc)
 function, popt = csvtocurve(func,path,givepopt=True)
 
 csvfile = reader(open(path))

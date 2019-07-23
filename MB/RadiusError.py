@@ -40,7 +40,7 @@ ax1.set_ylabel('Injection Height [km]')
 ax1.set_xlabel('Specific Impulse [s]')
 line1.set_label('OHB Values')
 line2.set_label('Model Values')
-line4.set_label('Absolute Error')
+line4.set_label('Error')
 
 
 ax2 = ax1.twinx()
