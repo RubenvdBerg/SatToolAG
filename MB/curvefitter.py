@@ -5,6 +5,16 @@ from numpy import array, exp, arange, linspace
 
 
 def csvtocurve(func,path,param=None,graph=False,givepopt=False):
+    '''Returns function that approximates the csv data in the given path for a given function transform,
+    CSV file needs to be two comma separated columns of X and Y data without headers or (empty) strings.
+
+    func    = function form                                 (Example: lambda x,a,b: a*x+b)
+    path    = pathstring                                    (Example: 'Data/datafile.csv')
+    param   = list of first guesses for paramaters a,b,..   (Example: [1.0,0.1,0.8])
+    grap    = if True returns graph of the datapoints and approximated curve as well as R2 value
+    givepopt= if True returns function as well as list of optimal parameters
+    '''
+
     csvfile = open(path)
     dataset = reader(csvfile)
     Data = [[],[]]
@@ -39,6 +49,12 @@ def csvtocurve(func,path,param=None,graph=False,givepopt=False):
 
 if __name__ == '__main__':
     print('Hi')
+
+    # f = lambda x,a,b,c,d: a+b*x+c*x**2+d*x**3
+
+    f = lambda x,a,b,c,d,e : a+b*x+c*x**2+d*x**3+e*x**4
+    func, popt = csvtocurve(f,'Data/LauncherAriane64.csv',graph=True,givepopt=True)
+    print(popt)
     # f = lambda x,a,b,c,d,e,f: a+b*x+c*x**2+d*x**3+e*x**4+f*x**5
     # popt = csvtocurve(f,'Data/InjectionHeight.csv')
     #

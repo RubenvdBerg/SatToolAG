@@ -114,7 +114,7 @@ class MBOne(ExplicitComponent):
         DV      = 0
         cycle   = 0
         Ri      = R_0
-        R_E     = 6378000 #Earth Radius in [m]
+        R_E     = 6371000                   #Earth Radius in [m]
         t       = 0
 
         #Cycle Iteration

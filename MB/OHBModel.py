@@ -1,11 +1,10 @@
-from scipy.optimize import newton
 from math import exp,log,sqrt
 from interpolate import csv_ip1d
 from curvefitter import csvtocurve
 from csv import writer
 
 
-def OHBModel(I_sp, P_sat, t_trans, M_dry, R_f):
+def OHBModel(I_sp, P_sat, t_trans, M_dry, R_f, eta='30',launcher='Ariane62'):
     '''Determines the Injection Height [km], Separation Mass [kg] and Transfer Efficiency [%] given the following parameters
     I_sp    = Specific Impulse in [s]
     P_sat   = Satellite Power in [W]
@@ -13,8 +12,22 @@ def OHBModel(I_sp, P_sat, t_trans, M_dry, R_f):
     M_dry   = Dry Satellite Mass in [kg]
     R_f     = Target Orbit in [m]'''
 
+    eta_options = ['30','50','70','100','Average']
+    if eta not in eta_options:
+        raise ValueError(f"Invalid eta. Expected one of: {eta_options}")
 
-    FPfunc  = csv_ip1d('Data/FP_Isp30.csv')
+    launcher_options = ['Ariane62', 'Soyuz', 'Ariane64']
+    if launcher not in launcher_options:
+        raise ValueError(f"Invalid launcher. Expected one of: {launcher_options}")
+
+    if not 6371000<=R_f<=36000000:
+        raise ValueError(f"Invalid Target Orbit. Must be between:6371000 and 36000000 [m]!!" )
+
+    FPfunc, bounds  = csv_ip1d('Data/FP_Isp'+eta+'.csv', bounds=True)
+
+    if not (bounds[0]<=I_sp<=bounds[1]):
+        raise ValueError(f"For eta={eta}. I_sp must be between {bounds[0]:.1f} and {bounds[1]:.1f} seconds")
+
     FPRatio = FPfunc(I_sp)*10**-6                   #Force-Power Ratio in [N/W]
     Thrust  = FPRatio*P_sat                         #Thrust in [N]
     mflow   = Thrust/(I_sp*9.81)                    #Mass Flow in [kg/s]
@@ -23,10 +36,23 @@ def OHBModel(I_sp, P_sat, t_trans, M_dry, R_f):
     mu      = 3.98600*10**14                        #Earth's Gravitational Parameter in [m3/s2]
     R0      = mu/((DV+sqrt(mu/R_f))**2)             #Injection Radius in [m]
     Rinject = R0/1000.-6371.                        #Injection Height in [km]
+    if Rinject<400:
+        Rinject = 400
 
-    #Third order polynomial approximation of Ariane62 Launcher Data
-    f = lambda x,a,b,c,d : a+b*x+c*x**2+d*x**3
-    RtoM = csvtocurve(f,'Data/Ariane62MassRadiusWollenhaupt.csv')
+
+    if launcher == 'Ariane62':
+        #Third order polynomial approximation of Ariane62 Launcher Data (MEO)
+        f = lambda x,a,b,c,d : a+b*x+c*x**2+d*x**3
+        RtoM = csvtocurve(f,'Data/Launchers/Ariane62MassRadiusWollenhaupt.csv')
+    if launcher == 'Soyuz':
+        #Fourth Order polynomial approximation of Soyuz Launcher Data (MEO)
+        f = lambda x,a,b,c,d,e : a+b*x+c*x**2+d*x**3+e*x**4
+        RtoM = csvtocurve(f,'Data/Launchers/Soyuz.csv')
+    if launcher == 'Ariane64':
+        #Fourth Order polynomial approximation of Soyuz Launcher Data (MTO)
+        f = lambda x,a,b,c,d,e : a+b*x+c*x**2+d*x**3+e*x**4
+        RtoM = csvtocurve(f,'Data/Launchers/Ariane64.csv')
+
     Msep = RtoM(Rinject)                            #Separation Mass in [kg]
     SatR    = Msep/(M_dry+Mp)*100                   #Satellite Ratio in [%]
 
@@ -49,7 +75,7 @@ if __name__ == '__main__':
     csvfile = writer(open('radiusdata2.csv','w+'))
 
 
-    for i in range(210,3600,100):
+    for i in range(200,3600,100):
         Ri, Mi, Si, DV = OHBModel(I_sp=i, P_sat=5000.,t_trans=120*24*3600.,M_dry=2000.,R_f=23222.*10**3)
         Rlist.append(Ri)
         Mlist.append(Mi)

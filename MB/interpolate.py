@@ -5,7 +5,15 @@ from numpy import array, exp, arange
 
 
 def csv_ip1d(path,graph=False,bounds=False,switch=False):
-    '''Function that opens csv file and converts the data to an interpolated line fucntion. CSV file needs to be 2 columns with only data and no headers or (empty) strings'''
+    '''Opens csv file and converts the data to an interpolated line fucntion.
+    CSV file needs to be two comma separated columns of X and Y data without headers or (empty) strings
+
+    path    = pathstring                                    (Example: 'Data/datafile.csv')
+    param   = list of first guesses for paramaters a,b,..   (Example: [1.0,0.1,0.8])
+    grap    = if True returns graph of the datapoint and approximated curve
+    bounds  = if True returns boundaries of the interpolated function as well as the function
+    switch  = if True plots x-values as y and vice versa
+    '''
     csvfile = open(path)
     dataset = reader(csvfile)
     Data = [[],[]]
