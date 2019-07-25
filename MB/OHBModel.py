@@ -12,6 +12,7 @@ def OHBModel(I_sp, P_sat, t_trans, M_dry, R_f, eta='30',launcher='Ariane62'):
     M_dry   = Dry Satellite Mass in [kg]
     R_f     = Target Orbit in [m]'''
 
+    #Setting Errors and Parameter Options
     eta_options = ['30','50','70','100','Average']
     if eta not in eta_options:
         raise ValueError(f"Invalid eta. Expected one of: {eta_options}")
@@ -23,8 +24,11 @@ def OHBModel(I_sp, P_sat, t_trans, M_dry, R_f, eta='30',launcher='Ariane62'):
     if not 6371000<=R_f<=36000000:
         raise ValueError(f"Invalid Target Orbit. Must be between:6371000 and 36000000 [m]!!" )
 
+    #Creating Interpolating Function from graph in Wollenhaupt paper:
+    #"Future Electric Propulsion Needs deduced from launcher and mission constraints"
     FPfunc, bounds  = csv_ip1d('Data/FP_Isp'+eta+'.csv', bounds=True)
 
+    #Another Error set
     if not (bounds[0]<=I_sp<=bounds[1]):
         raise ValueError(f"For eta={eta}. I_sp must be between {bounds[0]:.1f} and {bounds[1]:.1f} seconds")
 
@@ -32,8 +36,9 @@ def OHBModel(I_sp, P_sat, t_trans, M_dry, R_f, eta='30',launcher='Ariane62'):
     Thrust  = FPRatio*P_sat                         #Thrust in [N]
     mflow   = Thrust/(I_sp*9.81)                    #Mass Flow in [kg/s]
     Mp      = mflow*t_trans                         #Propellant Mass in [kg]
-    DV      = I_sp*9.81*log(1+(Mp/M_dry))           #DeltaV in [m/s]
+    DV      = I_sp*9.81*log(1+(Mp/M_dry))           #DeltaV in [m/s] (Tsiolkovsky Equation)
     mu      = 3.98600*10**14                        #Earth's Gravitational Parameter in [m3/s2]
+    #(For Low Thrust Orbit Transfer DeltaV is equal to the difference in circular velocity)
     R0      = mu/((DV+sqrt(mu/R_f))**2)             #Injection Radius in [m]
     Rinject = R0/1000.-6371.                        #Injection Height in [km]
     if Rinject<400:
