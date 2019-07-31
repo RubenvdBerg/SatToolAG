@@ -53,7 +53,7 @@ if __name__ == '__main__':
     # f = lambda x,a,b,c,d: a+b*x+c*x**2+d*x**3
 
     f = lambda x,a,b,c,d,e : a+b*x+c*x**2+d*x**3+e*x**4
-    func, popt = csvtocurve(f,'Data/LauncherAriane64.csv',graph=True,givepopt=True)
+    func, popt = csvtocurve(f,'Data/Launchers/Ariane64.csv',graph=True,givepopt=True)
     print(popt)
     # f = lambda x,a,b,c,d,e,f: a+b*x+c*x**2+d*x**3+e*x**4+f*x**5
     # popt = csvtocurve(f,'Data/InjectionHeight.csv')

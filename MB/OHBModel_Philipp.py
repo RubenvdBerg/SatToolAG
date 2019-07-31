@@ -99,7 +99,7 @@ def OHBModel(I_sp, P_sat, t_trans, M_dry, R_f):
     R_f     = Target Orbit in [m]'''
 
 
-    FPfunc  = csv_ip1d('Data/FP_Isp-Graph.csv')
+    FPfunc  = csv_ip1d('Data/FP_IspAverage.csv')
     FPRatio = FPfunc(I_sp)*10**-6                   #Force-Power Ratio in [N/W]
     Thrust  = FPRatio*P_sat                         #Thrust in [N]
     mflow   = Thrust/(I_sp*9.81)                    #Mass Flow in [kg/s]
@@ -110,7 +110,7 @@ def OHBModel(I_sp, P_sat, t_trans, M_dry, R_f):
 
     #Third order polynomial approximation of Ariane62 Launcher Data
     f = lambda x,a,b,c,d : a+b*x+c*x**2+d*x**3
-    RtoM = csvtocurve(f,'Data/Ariane62MassRadiusWollenhaupt.csv')
+    RtoM = csvtocurve(f,'Data/Launchers/Ariane62MassRadiusWollenhaupt.csv')
     Msep = RtoM(Rinject)
 
     SatR    = Msep/(M_dry+Mp)*100                   #Satellite Ratio in [%]

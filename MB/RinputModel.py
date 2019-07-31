@@ -2,20 +2,68 @@ from curvefitter import csvtocurve
 from interpolate import csv_ip1d
 from scipy.interpolate import interp1d
 
-def OHBModelR(I_sp, P_sat, t_trans, M_dry, R_inj):
-    FPfunc  = csv_ip1d('Data/FP_Isp-Graph.csv')
-    FPRatio = FPfunc(I_sp)*10**-6        #Force-Power Ratio in [N/W]
+def OHBModelR(I_sp, P_sat, t_trans, M_dry, R_f, R_inj eta='30',launcher='Ariane62'):
+    '''Determines the Injection Height [km], Separation Mass [kg] and Transfer Efficiency [%] given the following parameters
+    I_sp    = Specific Impulse in [s]
+    P_sat   = Satellite Power in [W]
+    t_trans = Allowed Transfer Time in [s]
+    M_dry   = Dry Satellite Mass in [kg]
+    R_f     = Target Orbit in [m]'''
+
+    #Setting Errors and Parameter Options
+    eta_options = ['30','50','70','100','Average']
+    if eta not in eta_options:
+        raise ValueError(f"Invalid eta. Expected one of: {eta_options}")
+
+    launcher_options = ['Ariane62', 'Soyuz', 'Ariane64']
+    if launcher not in launcher_options:
+        raise ValueError(f"Invalid launcher. Expected one of: {launcher_options}")
+
+    if not 6371000<=R_f<=36000000:
+        raise ValueError(f"Invalid Target Orbit. Must be between:6371000 and 36000000 [m]!!" )
+
+    #Creating Interpolating Function from graph in Wollenhaupt paper:
+    #"Future Electric Propulsion Needs deduced from launcher and mission constraints"
+    FPfunc, bounds  = csv_ip1d('Data/FP_Isp'+eta+'.csv', bounds=True)
+
+    #Another Error set
+    if not (bounds[0]<=I_sp<=bounds[1]):
+        raise ValueError(f"For eta={eta}. I_sp must be between {bounds[0]:.1f} and {bounds[1]:.1f} seconds")
+
+    FPRatio = FPfunc(I_sp)*10**-6                   #Force-Power Ratio in [N/W]
     Thrust  = FPRatio*P_sat                         #Thrust in [N]
     mflow   = Thrust/(I_sp*9.81)                    #Mass Flow in [kg/s]
     Mp      = mflow*t_trans                         #Propellant Mass in [kg]
-    Rinject = R_inj
+    DV      = I_sp*9.81*log(1+(Mp/M_dry))           #DeltaV in [m/s] (Tsiolkovsky Equation)
+    mu      = 3.98600*10**14                        #Earth's Gravitational Parameter in [m3/s2]
+    #(For Low Thrust Orbit Transfer DeltaV is equal to the difference in circular velocity)
+    R0      = mu/((DV+sqrt(mu/R_f))**2)             #Injection Radius in [m]
+    Rinject = R_inj                       #Injection Height in [km]
+    if Rinject<400:
+        Rinject = 400
 
-    #Linear approximation of Ariane62 Launcher Data
-    f = lambda x,a,b,c,d : a+b*x+c*x**2+d*x**3
-    RtoM = csvtocurve(f,'Data/Ariane62MassRadiusWollenhaupt.csv')
-    Msep = RtoM(Rinject)
 
+    if launcher == 'Ariane62':
+        #Third order polynomial approximation of Ariane62 Launcher Data (MEO)
+        f = lambda x,a,b,c,d : a+b*x+c*x**2+d*x**3
+        RtoM = csvtocurve(f,'Data/Launchers/Ariane62MassRadiusWollenhaupt.csv')
+    if launcher == 'Soyuz':
+        #Fourth Order polynomial approximation of Soyuz Launcher Data (MEO)
+        f = lambda x,a,b,c,d,e : a+b*x+c*x**2+d*x**3+e*x**4
+        RtoM = csvtocurve(f,'Data/Launchers/Soyuz.csv')
+    if launcher == 'Ariane64':
+        #Fourth Order polynomial approximation of Soyuz Launcher Data (MTO)
+        f = lambda x,a,b,c,d,e : a+b*x+c*x**2+d*x**3+e*x**4
+        RtoM = csvtocurve(f,'Data/Launchers/Ariane64.csv')
+
+    Msep = RtoM(Rinject)                            #Separation Mass in [kg]
     SatR    = Msep/(M_dry+Mp)*100                   #Satellite Ratio in [%]
+
+
+    # print(f"Thrust-Power Ratio is {FPRatio*10**6} mN/kW")
+    # print(f"Injection Height is {Rinject} km.")
+    # print(f"Separation Mass is {Msep} kg.")
+    # print(f"Satellite Ratio is {SatR}%.")
     return Msep, SatR
 
 if __name__ == '__main__':
