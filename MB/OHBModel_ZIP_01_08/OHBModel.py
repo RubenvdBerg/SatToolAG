@@ -4,7 +4,7 @@ from curvefitter import csvtocurve
 from csv import writer
 
 
-def OHBModel(I_sp, P_sat, t_trans, M_dry, R_f, eta='30',launcher=None, R_inj_v=None,M_sep_v=None,print_v=False):
+def OHBModel(I_sp, P_sat, t_trans, M_dry, R_f, eta='Average',launcher=None, R_inj_v=None,M_sep_v=None,print_v=False,mode='curve'):
     '''Determines the Injection Height [km], Separation Mass [kg] and Transfer Efficiency [%] given the following parameters
     I_sp    = Specific Impulse in [s]
     P_sat   = Satellite Power in [W]
@@ -34,6 +34,11 @@ def OHBModel(I_sp, P_sat, t_trans, M_dry, R_f, eta='30',launcher=None, R_inj_v=N
     if not 6371000<=R_f<=36000000:
         raise ValueError(f"Invalid Target Orbit. Must be between:6371000 and 36000000 [m]!!" )
 
+
+    modes = ['curve','interpolate']
+    if mode not in modes:
+        raise ValueError(f"Invalid mode. Expected one of: {modes}")
+
     #Creating Interpolating Function from Figure 2 in Wollenhaupt paper:
     #"Future Electric Propulsion Needs deduced from launcher and mission constraints"
     #Selects right data set based on 'eta'. 'eta' options only make sense if you see the figure.
@@ -46,7 +51,7 @@ def OHBModel(I_sp, P_sat, t_trans, M_dry, R_f, eta='30',launcher=None, R_inj_v=N
     FP_ratio= FPfunc(I_sp)*10**-6                   #Force-Power Ratio in [N/W]
     Thrust  = FP_ratio*P_sat                        #Thrust in [N]
     mflow   = Thrust/(I_sp*9.81)                    #Mass Flow in [kg/s]
-    Mp      = mflow*t_trans                         #Propellant Mass in [kg]
+    Mp      = mflow*t_trans                       #Propellant Mass in [kg]
 
     #Set Inject Height if given
     if R_inj_v != None:
@@ -59,26 +64,43 @@ def OHBModel(I_sp, P_sat, t_trans, M_dry, R_f, eta='30',launcher=None, R_inj_v=N
         R0      = mu/((DV+sqrt(mu/R_f))**2)             #Injection Radius in [m]
         R_E     = 6371.                                 #Earth Radius in [km]
         R_inj   = R0/1000.-R_E                          #Injection Height in [km]
+        R_inj   += R_inj*.25
         #Setting minimal Orbit height
         if R_inj<400:
             R_inj = 400
 
 
     if launcher == 'Ariane62':
-        #Third order polynomial approximation of Ariane62 Launcher Data (MEO)
-        f = lambda x,a,b,c,d : a+b*x+c*x**2+d*x**3
-        RtoM = csvtocurve(f,'Data/Launchers/Ariane62MassRadiusWollenhaupt.csv')
+        launchpath = 'Data/Launchers/Ariane62MassRadiusWollenhaupt.csv'
+        if mode == 'curve':
+            #Third order polynomial approximation of Ariane62 Launcher Data (MEO)
+            f = lambda x,a,b,c,d : a+b*x+c*x**2+d*x**3
+            RtoM = csvtocurve(f,launchpath)
+        elif mode == 'interpolate':
+            RtoM, Rbounds = csv_ip1d(launchpath,bounds=True)
     elif launcher == 'Soyuz':
-        #Fourth Order polynomial approximation of Soyuz Launcher Data (MEO)
-        f = lambda x,a,b,c,d,e : a+b*x+c*x**2+d*x**3+e*x**4
-        RtoM = csvtocurve(f,'Data/Launchers/Soyuz.csv')
+        launchpath =  'Data/Launchers/Soyuz.csv'
+        if mode == 'curve':
+            #Fourth Order polynomial approximation of Soyuz Launcher Data (MEO)
+            f = lambda x,a,b,c,d,e : a+b*x+c*x**2+d*x**3+e*x**4
+            RtoM = csvtocurve(f,launchpath)
+        elif mode == 'interpolate':
+            RtoM, Rbounds = csv_ip1d(launchpath,bounds=True)
     elif launcher == 'Ariane64':
-        #Fourth Order polynomial approximation of Soyuz Launcher Data (MTO)
-        f = lambda x,a,b,c,d,e : a+b*x+c*x**2+d*x**3+e*x**4
-        RtoM = csvtocurve(f,'Data/Launchers/Ariane64.csv')
+        launchpath = 'Data/Launchers/Ariane64.csv'
+        if mode == 'curve':
+            #Fourth Order polynomial approximation of Soyuz Launcher Data (MTO)
+            f = lambda x,a,b,c,d,e : a+b*x+c*x**2+d*x**3+e*x**4
+            RtoM = csvtocurve(f,launchpath)
+        elif mode == 'interpolate':
+            RtoM, Rbounds = csv_ip1d(launchpath,bounds=True)
     elif launcher == None and M_sep_v == None:
         raise RuntimeError('Neither launcher nor M_sep_v are specified. Cannot Calculate T_eff')
 
+    #Errormessage for out of bounds interpolation
+    if mode == 'interpolate':
+        if not (Rbounds[0]<=R_inj<=Rbounds[1]):
+            raise ValueError(f'To use the {launcher} interpolation curve, Injection Height must be between {Rbounds[0]:.1f} km and {Rbounds[1]:.1f} km, but is {R_inj:.2f} km')
 
     if M_sep_v != None:
         if launcher != None:
@@ -106,7 +128,10 @@ if __name__ == '__main__':
     if erroronly is set to True only 1 graph per function is created showing only the errors,
      instead of 3 separate graphs showing both the data and errors of each separate transfer time (fig3) or launcher (fig4)'''
 
+    fig3errorplot('Data/Output/test3.csv',erroronly=True,inputR=True,inputM=False,savefile=False)
     fig3errorplot('Data/Output/test3.csv',erroronly=True,inputR=False,inputM=False,savefile=False)
-    fig4errorplot('Data/Output/test4.csv',erroronly=True,inputR=False,inputM=False,savefile=False)
-    # create_fig3data('Data/Output/fig3error.csv',inputR=False,inputM=False,graph=True)
+    fig3errorplot('Data/Output/test3.csv',erroronly=True,inputR=True,inputM=True,savefile=False)
+
+    # fig4errorplot('Data/Output/test4.csv',erroronly=True,inputR=True,inputM=True,savefile=False)
+    create_fig3data('Data/Output/fig3error.csv',inputR=False,inputM=False,graph=True)
     # create_fig4data('Data/Output/fig4error.csv',inputR=False,inputM=False,graph=True)
