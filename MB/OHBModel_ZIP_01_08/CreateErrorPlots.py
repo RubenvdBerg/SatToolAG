@@ -1,6 +1,6 @@
 from csvtodict import csvtodict
 from scipy.interpolate import interp1d
-from csv import reader
+from csv import reader, writer
 import matplotlib.pyplot as plt
 from FiguresDataCreate import create_fig3data, create_fig4data
 import os
@@ -42,15 +42,17 @@ def fig3errorplot(path,inputR=False,inputM=False,erroronly=False,savefile=False,
         fig2, ax4 = plt.subplots()
         ax4.set_xlabel('Specific Impulse [s]')
         ax4.set_ylabel('Error [%]')
-        ax5 = ax4.twinx()
-        ax5.set_ylabel('Error[%] Injection Height')
         fig2.suptitle('Soyuz Multiple Transfer Time Errors')
-
+        errorpath = path.replace(".csv","_errors.csv")
+        print(errorpath)
+        errorsavefile = writer(open(errorpath,'w+'))
         # ax4.set_xlim(left=0,right=4000)
         # ax4.set_ylim(top=15,bottom=-60)
         # ax5.set_ylim(top=600,bottom=-50)
     #Loop over the 3 transfer time options
     for days in [90,180,360]:
+        if erroronly == True:
+            errorsavefile.writerow([f'Isp {days}d',f' {days}d'])
         if erroronly == False:
             #set-up the figure
             fig, ax1 = plt.subplots()
@@ -61,8 +63,6 @@ def fig3errorplot(path,inputR=False,inputM=False,erroronly=False,savefile=False,
             ax2 = ax1.twinx()
             ax2.set_ylabel('Transfer Efficiency [%]')
             ax2.set_ylim(top=600)
-            ax3 = ax1.twinx()
-            ax3.set_ylabel('Error [%]')
             if inputR == True and inputM == True:
                 extra = ' for original R_inj and M_sep'
             elif inputR == True:
@@ -76,14 +76,16 @@ def fig3errorplot(path,inputR=False,inputM=False,erroronly=False,savefile=False,
             fig.suptitle(f'Soyuz MEO Transfer - Errors for {days} days transfer time{extra}')
 
             #set-up separate third axis
-            def make_patch_spines_invisible(ax):
-                ax.set_frame_on(True)
-                ax.patch.set_visible(False)
-                for sp in ax.spines.values():
-                    sp.set_visible(False)
-            ax3.spines['right'].set_position(('axes',1.08))
-            make_patch_spines_invisible(ax3)
-            ax3.spines['right'].set_visible(True)
+            # def make_patch_spines_invisible(ax):
+            #     ax.set_frame_on(True)
+            #     ax.patch.set_visible(False)
+            #     for sp in ax.spines.values():
+            #         sp.set_visible(False)
+            # ax3 = ax1.twinx()
+            # ax3.set_ylabel('Error [%]')
+            # ax3.spines['right'].set_position(('axes',1.08))
+            # make_patch_spines_invisible(ax3)
+            # ax3.spines['right'].set_visible(True)
 
 
         #Main data Loop
@@ -111,7 +113,10 @@ def fig3errorplot(path,inputR=False,inputM=False,erroronly=False,savefile=False,
                 for variable,i,func in zip(variables,ilist,functions):
                     modellist[i].append(variable)
                     OGlist[i].append(func(Isp))
-                    errorlist[i].append((variable-func(Isp))/func(Isp)*100.)
+                    error = (variable-func(Isp))/func(Isp)*100.
+                    errorlist[i].append(error)
+                    if variable == Teff and erroronly==True:
+                        errorsavefile.writerow([Isp,error])
                 Isplist.append(Isp)
         #Setting up iterables
         colors      = ['g','k','orange']
@@ -128,20 +133,17 @@ def fig3errorplot(path,inputR=False,inputM=False,erroronly=False,savefile=False,
                     ax1.plot(Isplist,modellist[i],label=f'{label} Model',color=color,linestyle='--')
                     ax1.plot(Isplist,OGlist[i],label=f'{label} Original',color=color,linestyle='-')
                 #Errors plotted on own axis as well because they can be negative
-                ax3.plot(Isplist,errorlist[i],label=f'{label} Error',color=errorcolor,linestyle=':')
+                # ax3.plot(Isplist,errorlist[i],label=f'{label} Error',color=errorcolor,linestyle=':')
             #Form Legend and assign location
             fig.legend(loc='upper right',bbox_to_anchor= (.95,0.85))
             plt.show()
         elif erroronly == True:
             errorlinestyledict = {'90':':','180':'-','360':'-.'}
             for i,label,errorcolor in zip(ilist,labels,errorcolors):
-                if 'Height' in label:
-                    ax5.plot(Isplist,errorlist[i],label=f'{label} Error {days} d',color=errorcolor,linestyle=errorlinestyledict[f'{days}'])
-                else:
-                    ax4.plot(Isplist,errorlist[i],label=f'{label} Error {days} d',color=errorcolor,linestyle=errorlinestyledict[f'{days}'])
+                ax4.plot(Isplist,errorlist[i],label=f'{label} Error {days} d',color=errorcolor,linestyle=errorlinestyledict[f'{days}'])
 
     if erroronly == True:
-        fig2.legend(loc='upper right',bbox_to_anchor= (.90,0.88))
+        fig2.legend(loc='upper right',bbox_to_anchor= (.93,0.20),ncol=3)
         plt.show()
 
     if savefile == False:
@@ -202,6 +204,9 @@ def fig4errorplot(path,inputR=False,inputM=False,erroronly=False,savefile=False,
         ax4.set_ylabel('Error [%]')
         # ax4.set_ylim(top=50,bottom=-25)
         fig2.suptitle('Multiple Launchers Errors')
+        errorpath = path.replace(".csv","_errors.csv")
+        print(errorpath)
+        errorsavefile = writer(open(errorpath,'w+'))
     #Loop over the 3 launcher options
     for launchername in launchernames:
         if erroronly == False:
@@ -261,7 +266,9 @@ def fig4errorplot(path,inputR=False,inputM=False,erroronly=False,savefile=False,
                 for variable,i,func in zip(variables,ilist,functions):
                     modellist[i].append(variable)
                     OGlist[i].append(func(Isp))
-                    errorlist[i].append((variable-func(Isp))/func(Isp)*100.)
+                    error = (variable-func(Isp))/func(Isp)*100.
+                    errorlist[i].append(error)
+                    errorsavefile.writerow([Isp,error])
                 Isplist.append(Isp)
         #Setting up iterables
         colors      = ['g','k','orange']
@@ -294,6 +301,7 @@ def fig4errorplot(path,inputR=False,inputM=False,erroronly=False,savefile=False,
         plt.show()
     if savefile == False:
         os.remove(path)
+        os.remove("error_"+path)
 
 
 if __name__ == '__main__':

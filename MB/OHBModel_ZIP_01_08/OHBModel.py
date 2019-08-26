@@ -49,25 +49,42 @@ def OHBModel(I_sp, P_sat, t_trans, M_dry, R_f, eta='Average',launcher=None, R_in
         raise ValueError(f"For eta={eta}. I_sp must be between {bounds[0]:.1f} and {bounds[1]:.1f} seconds")
 
     FP_ratio= FPfunc(I_sp)*10**-6                   #Force-Power Ratio in [N/W]
+    g0      = 9.81
     Thrust  = FP_ratio*P_sat                        #Thrust in [N]
-    mflow   = Thrust/(I_sp*9.81)                    #Mass Flow in [kg/s]
-    Mp      = mflow*t_trans                       #Propellant Mass in [kg]
+    mflow   = Thrust/(I_sp*g0)                    #Mass Flow in [kg/s]
+    Mp      = mflow*t_trans                         #Propellant Mass in [kg]
+    DV      = I_sp*g0*log(1+(Mp/M_dry))           #DeltaV in [m/s] (Tsiolkovsky Equation)
+    mu      = 3.98600*10**14                        #Earth's Gravitational Parameter in [m3/s2]
+    #(For Low Thrust Circular Orbit Transfer DeltaV is equal to the difference in circular velocity)
+    R0      = mu/((DV+sqrt(mu/R_f))**2)             #Injection Radius in [m]
+    R_E     = 6371.                                 #Earth Radius in [km]
 
+    #Calculate from maximum orbit transfer in allowed transfer time
+    R_inj   = R0/1000.-R_E                          #Injection Height in [km]
+    R_inj   *= 1.25
+    R_inj   += 760
+    #Setting minimal Orbit height
+    if R_inj<400:
+        R_inj   = 400
     #Set Inject Height if given
     if R_inj_v != None:
         R_inj = R_inj_v
-    #Otherwise calculate from maximum orbit transfer in allowed transfer time
-    else:
-        DV      = I_sp*9.81*log(1+(Mp/M_dry))           #DeltaV in [m/s] (Tsiolkovsky Equation)
-        mu      = 3.98600*10**14                        #Earth's Gravitational Parameter in [m3/s2]
-        #(For Low Thrust Circular Orbit Transfer DeltaV is equal to the difference in circular velocity)
-        R0      = mu/((DV+sqrt(mu/R_f))**2)             #Injection Radius in [m]
-        R_E     = 6371.                                 #Earth Radius in [km]
-        R_inj   = R0/1000.-R_E                          #Injection Height in [km]
-        R_inj   += R_inj*.25
-        #Setting minimal Orbit height
-        if R_inj<400:
-            R_inj = 400
+
+    #Recalculate Values in case of changed R_inj
+    # print(f'Rinj {R_inj}, Isp {I_sp}')
+    # print(f'R0 was {R0/1000}')
+    R0      = (R_inj+R_E)*1000
+    # print(f'R0 is {R0/1000}')
+    # print(f'DV was {DV}')
+    DV      = sqrt(mu/R0)-sqrt(mu/(R_f))
+    # print(f'DV is {DV}')
+    # print(f'Mp was {Mp}')
+    Mp      = (exp(DV/(I_sp*g0))-1)*M_dry
+    # print(f'Mp is {Mp}')
+    t_trans = Mp/mflow
+    # print(f'Transfer Time: {t_trans/(3600*24)}')
+    # print()
+
 
 
     if launcher == 'Ariane62':
@@ -78,6 +95,7 @@ def OHBModel(I_sp, P_sat, t_trans, M_dry, R_f, eta='Average',launcher=None, R_in
             RtoM = csvtocurve(f,launchpath)
         elif mode == 'interpolate':
             RtoM, Rbounds = csv_ip1d(launchpath,bounds=True)
+
     elif launcher == 'Soyuz':
         launchpath =  'Data/Launchers/Soyuz.csv'
         if mode == 'curve':
@@ -108,6 +126,7 @@ def OHBModel(I_sp, P_sat, t_trans, M_dry, R_f, eta='Average',launcher=None, R_in
         Msep = M_sep_v
     else:
         Msep    = RtoM(R_inj)           #Separation Mass in [kg]
+
     Teff    = Msep/(M_dry+Mp)*100       #Transfer Efficiency in [%] (Amount of Satellites for given Separation Mass)
 
     if print_v == True:
@@ -128,10 +147,10 @@ if __name__ == '__main__':
     if erroronly is set to True only 1 graph per function is created showing only the errors,
      instead of 3 separate graphs showing both the data and errors of each separate transfer time (fig3) or launcher (fig4)'''
 
-    fig3errorplot('Data/Output/test3.csv',erroronly=True,inputR=True,inputM=False,savefile=False)
-    fig3errorplot('Data/Output/test3.csv',erroronly=True,inputR=False,inputM=False,savefile=False)
-    fig3errorplot('Data/Output/test3.csv',erroronly=True,inputR=True,inputM=True,savefile=False)
+    # fig3errorplot('Data/Output/test3.csv',erroronly=True,inputR=True,inputM=False,savefile=False)
+    fig3errorplot('Data/Output/fig3data.csv',erroronly=True,inputR=False,inputM=False,savefile=True)
+    # fig3errorplot('Data/Output/test3.csv',erroronly=False,inputR=True,inputM=True,savefile=False)
 
     # fig4errorplot('Data/Output/test4.csv',erroronly=True,inputR=True,inputM=True,savefile=False)
-    create_fig3data('Data/Output/fig3error.csv',inputR=False,inputM=False,graph=True)
+    # create_fig3data('Data/Output/fig3error.csv',inputR=False,inputM=False,graph=True)
     # create_fig4data('Data/Output/fig4error.csv',inputR=False,inputM=False,graph=True)

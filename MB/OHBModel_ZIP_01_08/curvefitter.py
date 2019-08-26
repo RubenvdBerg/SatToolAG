@@ -44,7 +44,7 @@ def csvtocurve(func,path,param=None,graph=False,givepopt=False):
         print(f'R2 is {R2}')
     if  givepopt == True:
         return lambda x : func(x,*popt), popt
-    if givepopt == False:
+    elif givepopt == False:
         return lambda x : func(x,*popt)
 
 if __name__ == '__main__':

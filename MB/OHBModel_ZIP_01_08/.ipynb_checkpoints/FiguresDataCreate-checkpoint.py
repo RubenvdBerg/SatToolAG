@@ -4,7 +4,6 @@ import matplotlib.pyplot as plt
 from csvtodict import csvtodict
 from scipy.interpolate import interp1d
 import pandas as pd
-import numpy as np
 
 
 def create_fig3data(savepath,Isprange=(260,3600),step=20,inputR=False,inputM=False,graph=True):
@@ -54,7 +53,7 @@ def create_fig3data(savepath,Isprange=(260,3600),step=20,inputR=False,inputM=Fal
         OGIsp_to_M_func = interp1d(OGIspMs,OGMseps)
 
         (start, stop) = Isprange
-        for Isp in np.arange(start,stop,step):
+        for Isp in range(start,stop,step):
             #Calculating Rinj for Isp from original curve
             if inputR == True:
                 Given_Rinj  = OGIsp_to_R_func(Isp)
@@ -138,7 +137,7 @@ def create_fig4data(savepath,Isprange=(260,3600),step=20,inputR=False,inputM=Fal
         OGIsp_to_M_func = interp1d(OGIspMs,OGMseps)
 
         (start,stop) = Isprange
-        for Isp in np.arange(start,stop,step):# pdf = pd.read_csv(path,header=None)
+        for Isp in range(start,stop,step):# pdf = pd.read_csv(path,header=None)
     # loc180 = pdf.loc[pdf[0]=='Isp 180'].index[0]
     # loc360 = pdf.loc[pdf[0]=='Isp 360'].index[0]
     # pdf90 = pdf.iloc[:loc180].reset_index(drop=True)
