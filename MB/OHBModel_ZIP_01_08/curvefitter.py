@@ -15,12 +15,12 @@ def csvtocurve(func,path,param=None,graph=False,givepopt=False):
     givepopt= if True returns function as well as list of optimal parameters
     '''
 
-    csvfile = open(path)
-    dataset = reader(csvfile)
-    Data = [[],[]]
-    for i in dataset:
-        Data[0].append(i[0])
-        Data[1].append(i[1])
+    with open(path) as csvfile:
+        dataset = reader(csvfile)
+        Data = [[],[]]
+        for i in dataset:
+            Data[0].append(i[0])
+            Data[1].append(i[1])
     DataX = array([float(i) for i in Data[0]])
     DataY = array([float(i) for i in Data[1]])
     if param != None:

@@ -14,12 +14,12 @@ def csv_ip1d(path,graph=False,bounds=False,switch=False):
     bounds  = if True returns boundaries of the interpolated function as well as the function
     switch  = if True plots x-values as y and vice versa
     '''
-    csvfile = open(path)
-    dataset = reader(csvfile)
-    Data = [[],[]]
-    for i in dataset:
-        Data[0].append(i[0])
-        Data[1].append(i[1])
+    with open(path) as csvfile:
+        dataset = reader(csvfile)
+        Data = [[],[]]
+        for i in dataset:
+            Data[0].append(i[0])
+            Data[1].append(i[1])
     DataX = array([float(i) for i in Data[0]])
     DataY = array([float(i) for i in Data[1]])
     if switch == True:

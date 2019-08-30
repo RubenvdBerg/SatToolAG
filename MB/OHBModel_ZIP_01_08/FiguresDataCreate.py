@@ -69,7 +69,16 @@ def create_fig3data(savepath,Isprange=(260,3600),step=20,inputR=False,inputM=Fal
                 launcher    = 'Soyuz'
 
             #Running Model
-            Ri, Mi, Si = OHBModel(I_sp=Isp, P_sat=2500.,t_trans=tdays*24*3600.,M_dry=1000.,R_f=23222.*10**3,launcher=launcher,R_inj_v=Given_Rinj,M_sep_v=Given_Msep)
+            Ri, Mi, Si = OHBModel(
+                i_sp=Isp,
+                p_sat=2500.,
+                t_trans=tdays * 24 * 3600.,
+                m_dry=1000.,
+                r_f=23222. * 10 ** 3,
+                # eta_v = .41,
+                launcher=launcher,
+                r_inj_v=Given_Rinj,
+                m_sep_v=Given_Msep)
             Rlist.append(Ri)
             Mlist.append(Mi)
             Slist.append(Si)
@@ -159,7 +168,7 @@ def create_fig4data(savepath,Isprange=(260,3600),step=20,inputR=False,inputM=Fal
             else:
                 Given_Msep  = None
                 launch = launcher
-            Ri, Mi, Si = OHBModel(I_sp=Isp, P_sat=2500.,t_trans=90*24*3600.,M_dry=1000.,R_f=23222.*10**3,launcher=launch,R_inj_v=Given_Rinj,M_sep_v=Given_Msep)
+            Ri, Mi, Si = OHBModel(i_sp=Isp, p_sat=2500., t_trans=90 * 24 * 3600., m_dry=1000., r_f=23222. * 10 ** 3, launcher=launch, r_inj_v=Given_Rinj, m_sep_v=Given_Msep)
             datalist[0].append(Ri)
             datalist[1].append(Mi)
             datalist[2].append(Si)
